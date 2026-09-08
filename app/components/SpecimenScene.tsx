@@ -8,8 +8,7 @@ import * as THREE from "three";
 export type SpecimenLens = "field" | "science" | "geology" | "provenance";
 
 const MODEL_URL =
-  process.env.NEXT_PUBLIC_SPECIMEN_MODEL_URL ||
-  "https://raw.githubusercontent.com/LMNAOSA/provos/main/Matrixtwin_opal.glb";
+  process.env.NEXT_PUBLIC_SPECIMEN_MODEL_URL || "/api/specimen";
 
 class ModelErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
