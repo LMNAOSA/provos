@@ -8,6 +8,31 @@ type Request = { id: string; from: ExpertRole; prompt: string; response?: string
 type Answer = { text: string; basis: string; uncertainty: string; confidence: number; request?: Request; reassessment?: { text: string; confidence: number; changed: boolean } };
 type Case = { id: string; date: string; question: string; observation: string; image?: string; pxrf: string; answers: Partial<Record<ExpertRole, Answer>>; requests: Request[]; history: string[] };
 
+type ExpertPaneProps = {
+  role: ExpertRole;
+  answer?: Answer;
+  answerText: string;
+  setAnswerText: (value: string) => void;
+  basis: string;
+  setBasis: (value: string) => void;
+  uncertainty: string;
+  setUncertainty: (value: string) => void;
+  confidence: number;
+  setConfidence: (value: number) => void;
+  lock: () => void;
+  myRequest?: Request;
+  requestPrompt: string;
+  setRequestPrompt: (value: string) => void;
+  requestPxrf: () => void;
+  reassessment: string;
+  setReassessment: (value: string) => void;
+  reassessmentConfidence: number;
+  setReassessmentConfidence: (value: number) => void;
+  changed: boolean;
+  setChanged: (value: boolean) => void;
+  lockReassessment: () => void;
+};
+
 const PEOPLE: Record<Role, { name: string; title: string; tag: string }> = {
   MAT: { name: "Matt Kathagen", title: "Mooka Boys · Field / Mining", tag: "FIELD" },
   SPOONER: { name: "Professor Nigel Spooner", title: "Professor of Radiation Physics and Luminescence", tag: "SCIENCE" },
@@ -152,7 +177,7 @@ function NewQuestion({ question, setQuestion, observation, setObservation, image
   return <div className="newQuestion"><span className="kicker">FIELD PORTAL / NEW CASE</span><h2>Ask the unknown.</h2><p>One field question. One photograph. One blind evaluation. pXRF begins as an unknown.</p><label>PHOTOGRAPH<input type="file" accept="image/*" onChange={(e: ChangeEvent<HTMLInputElement>) => readImage(e, setImage)} /></label>{image && <img className="uploadPreview" src={image} alt="Preview" />}<label>QUESTION<textarea value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Ask the unknown" /></label><label>FIELD OBSERVATION<input value={observation} onChange={(e) => setObservation(e.target.value)} placeholder="What did you see?" /></label><div className="newPxrf"><span>pXRF DATA</span><strong>NO XRF DATA SUPPLIED</strong><small>The absence of data is deliberate. Experts decide whether to request the measurement.</small></div><button className="loginBtn" onClick={create}>LOCK QUESTION &amp; SEND TO EXPERTS <span>→</span></button></div>;
 }
 
-function ExpertPane(p: any) {
+function ExpertPane(p: ExpertPaneProps) {
   return <div className="workflowStack"><section className="expertResponse"><div className="responseHead"><div><span className="kicker">{PEOPLE[p.role].tag} / INDEPENDENT RESPONSE</span><h3>{PEOPLE[p.role].name}</h3><p>{PEOPLE[p.role].title}</p></div><div className="blindLock">BLIND<br /><small>OTHER RESPONSE HIDDEN</small></div></div>{!p.answer ? <><div className="captureGrid"><label>INTERPRETATION<textarea value={p.answerText} onChange={(e) => p.setAnswerText(e.target.value)} placeholder="What do you think is happening?" /></label><label>BASIS / EXPERIENCE<textarea value={p.basis} onChange={(e) => p.setBasis(e.target.value)} placeholder="What informs your judgement?" /></label><label>UNCERTAINTY<textarea value={p.uncertainty} onChange={(e) => p.setUncertainty(e.target.value)} placeholder="What remains uncertain?" /></label></div><Confidence value={p.confidence} setValue={p.setConfidence} label="INITIAL PROBABILITY" /><button className="loginBtn" onClick={p.lock}>LOCK INITIAL JUDGEMENT <span>→</span></button></> : <div className="lockedResponse"><span>INITIAL JUDGEMENT LOCKED · {p.answer.confidence}%</span><blockquote>“{p.answer.text}”</blockquote><div className="lockedGrid"><div><small>BASIS</small><p>{p.answer.basis}</p></div><div><small>UNCERTAINTY</small><p>{p.answer.uncertainty}</p></div></div></div>}</section>{p.answer && <section className="evidenceRequest"><span className="kicker">EVIDENCE REQUEST</span><h3>Would pXRF change your mind?</h3><p>Request compositional data only if you believe it could materially change your probability.</p>{p.myRequest ? <div className="requestState"><strong>{p.myRequest.status === "FULFILLED" ? "pXRF DATA RETURNED" : "pXRF REQUEST SENT"}</strong><p>{p.myRequest.prompt}</p>{p.myRequest.status === "FULFILLED" && <small>The original judgement remains intact. Reassess below.</small>}</div> : <><textarea value={p.requestPrompt} onChange={(e) => p.setRequestPrompt(e.target.value)} placeholder="Why would pXRF help?" /><button className="btn accent wide" onClick={p.requestPxrf}>REQUEST pXRF DATA <span>→</span></button></>}</section>}{p.answer && p.myRequest?.status === "FULFILLED" && <section className="evidenceRequest"><span className="kicker">REASSESSMENT</span><h3>What changed?</h3><textarea value={p.reassessment} onChange={(e) => p.setReassessment(e.target.value)} placeholder="What does the new evidence change?" /><Confidence value={p.reassessmentConfidence} setValue={p.setReassessmentConfidence} label="REVISED PROBABILITY" /><label className="changeToggle"><input type="checkbox" checked={p.changed} onChange={(e) => p.setChanged(e.target.checked)} /> Probability changed</label><button className="loginBtn" onClick={p.lockReassessment}>LOCK REASSESSMENT <span>→</span></button></section>}</div>;
 }
 
@@ -168,7 +193,11 @@ function Reveal({ active }: { active: Case }) {
   const spooner = active.answers.SPOONER!;
   const danielle = active.answers.DANIELLE!;
   const delta = Math.abs(spooner.confidence - danielle.confidence);
-  return <section className="revealSection"><span className="kicker">REVEAL / AFTER BOTH JUDGEMENTS LOCK</span><h3>Two readings of<br /><em>the same unknown.</em></h3><div className="answersGrid">{[["SCIENCE", spooner], ["ANALYSIS", danielle]].map(([label, value]) => { const answer = value as Answer; return <article key={String(label)}><small>{label}</small><h4>{answer.confidence}% initial probability</h4><blockquote>“{answer.text}”</blockquote><div className="revealMeta"><div><small>BASIS</small><p>{answer.basis}</p></div><div><small>UNCERTAINTY</small><p>{answer.uncertainty}</p></div></div>{answer.reassessment && <div className="reassessment"><small>AFTER pXRF · {answer.reassessment.confidence}%</small><p>{answer.reassessment.text}</p></div>}</article>; })}</div><div className="disagreement"><span>DISAGREEMENT</span><strong>{delta}% confidence spread</strong><p>Where the two judgements diverge is preserved as an object of learning, not resolved away.</p></div></section>;
+  const responses: Array<{ label: string; value: Answer }> = [
+    { label: "SCIENCE", value: spooner },
+    { label: "ANALYSIS", value: danielle },
+  ];
+  return <section className="revealSection"><span className="kicker">REVEAL / AFTER BOTH JUDGEMENTS LOCK</span><h3>Two readings of<br /><em>the same unknown.</em></h3><div className="answersGrid">{responses.map(({ label, value: answer }) => <article key={label}><small>{label}</small><h4>{answer.confidence}% initial probability</h4><blockquote>“{answer.text}”</blockquote><div className="revealMeta"><div><small>BASIS</small><p>{answer.basis}</p></div><div><small>UNCERTAINTY</small><p>{answer.uncertainty}</p></div></div>{answer.reassessment && <div className="reassessment"><small>AFTER pXRF · {answer.reassessment.confidence}%</small><p>{answer.reassessment.text}</p></div>}</article>)}</div><div className="disagreement"><span>DISAGREEMENT</span><strong>{delta}% confidence spread</strong><p>Where the two judgements diverge is preserved as an object of learning, not resolved away.</p></div></section>;
 }
 
 function History({ active }: { active: Case }) {
