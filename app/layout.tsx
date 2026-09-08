@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./experiment.css";
 
 export const metadata: Metadata = {
   title: "The Andamooka Experiment — ProvenanceOS™",
