@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "The Andamooka Experiment — ProvenanceOS™",
-  description: "A closed-loop experiment in learning from human expertise without losing where the knowledge came from."
+  description: "A closed-loop experiment in learning from human expertise without losing where the knowledge came from.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

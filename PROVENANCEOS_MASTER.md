@@ -42,3 +42,9 @@ Build a living Andamooka knowledge network linking people, specimens, observatio
 
 ### 13. Strategic principle
 The goal is not consensus. The goal is useful disagreement, visible uncertainty, traceable evidence and knowledge that can evolve without erasing its history.
+
+## Trace interaction principle
+
+The TRACE experience is intentionally not a conventional knowledge graph or architecture diagram. The physical specimen is the visual anchor. Provenance is represented through light, motion, relationships and state changes around the specimen.
+
+The default interaction should feel like entering a scientific instrument: minimal chrome, large object, restrained typography, and progressive disclosure. Detailed event metadata appears only when the visitor asks to inspect why the system believes a conclusion.
