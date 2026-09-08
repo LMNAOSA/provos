@@ -7,8 +7,12 @@ import * as THREE from "three";
 
 export type SpecimenLens = "field" | "science" | "geology" | "provenance";
 
+// The Matrix Twin is a binary GLB. Serve the immutable GitHub object through
+// jsDelivr so the browser receives the original bytes without an Edge proxy
+// or response-size/truncation issues.
 const MODEL_URL =
-  process.env.NEXT_PUBLIC_SPECIMEN_MODEL_URL || "/api/specimen";
+  process.env.NEXT_PUBLIC_SPECIMEN_MODEL_URL ||
+  "https://cdn.jsdelivr.net/gh/LMNAOSA/provos@7ec321a903614f736a0a38b90e8bd04b06f8060c/Matrixtwin_opal.glb";
 
 class ModelErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
