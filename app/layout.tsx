@@ -3,6 +3,7 @@ import "./globals.css";
 import "./experiment.css";
 import "./experiment-v2.css";
 import "./ive.css";
+import "./ive-detail.css";
 
 export const metadata: Metadata = {
   title: "The Andamooka Experiment — ProvenanceOS™",
