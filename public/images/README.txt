@@ -1,6 +1,3 @@
-Place the production Matrix Twin model at:
-
-public/images/Matrixtwin_opal.glb
-
-The React Three Fiber specimen viewer loads this exact path.
-The model file is intentionally not fabricated or substituted in this repository archive.
+The production Matrix Twin is sourced from the repository root (Matrixtwin_opal.glb).
+The prebuild script copies it into this public/images directory before Next.js builds.
+Do not commit a placeholder file at this path.

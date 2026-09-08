@@ -2,14 +2,56 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
-import { useMemo, useRef } from "react";
+import { Component, Suspense, useMemo, useRef, type ReactNode } from "react";
 import * as THREE from "three";
 
 export type SpecimenLens = "field" | "science" | "geology" | "provenance";
 
+const MODEL_URL = "/images/Matrixtwin_opal.glb";
+
+// The production build copies the authoritative repo-root GLB into this CDN-served path.
+// Keep this as a constant so the browser never references /public/... directly.
+
+class ModelErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.warn("ProvenanceOS specimen model could not be loaded.", error);
+  }
+
+  render() {
+    return this.state.hasError ? this.props.fallback : this.props.children;
+  }
+}
+
+function FallbackSpecimen({ lens }: { lens: SpecimenLens }) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((_, delta) => {
+    if (ref.current) ref.current.rotation.y += delta * 0.16;
+  });
+
+  const color = lens === "science" ? "#526f72" : lens === "geology" ? "#725b40" : "#66533b";
+  return (
+    <group rotation={[0.12, -0.45, 0.08]}>
+      <mesh ref={ref} rotation={[0.25, 0.15, -0.12]} scale={[2.4, 1.45, 1.1]}>
+        <dodecahedronGeometry args={[1, 2]} />
+        <meshStandardMaterial color={color} roughness={0.78} metalness={0.08} />
+      </mesh>
+      <mesh scale={[2.1, 1.12, 0.86]} rotation={[0.25, 0.15, -0.12]}>
+        <dodecahedronGeometry args={[1, 2]} />
+        <meshStandardMaterial color="#231d18" roughness={0.92} metalness={0} transparent opacity={0.62} />
+      </mesh>
+    </group>
+  );
+}
+
 function Model({ lens }: { lens: SpecimenLens }) {
   const group = useRef<THREE.Group>(null);
-  const { scene } = useGLTF("/images/Matrixtwin_opal.glb");
+  const { scene } = useGLTF(MODEL_URL);
 
   const prepared = useMemo(() => {
     const copy = scene.clone(true);
@@ -45,7 +87,11 @@ function Model({ lens }: { lens: SpecimenLens }) {
     group.current.rotation.x = Math.sin(Date.now() * 0.00025) * 0.035;
   });
 
-  return <group ref={group} rotation={[0.12, -0.45, 0.08]}><primitive object={prepared} /></group>;
+  return (
+    <group ref={group} rotation={[0.12, -0.45, 0.08]}>
+      <primitive object={prepared} />
+    </group>
+  );
 }
 
 export function SpecimenScene({ compact = false, lens = "field" as SpecimenLens }: { compact?: boolean; lens?: SpecimenLens }) {
@@ -56,14 +102,23 @@ export function SpecimenScene({ compact = false, lens = "field" as SpecimenLens 
         <directionalLight position={[4, 4, 6]} intensity={2.6} />
         <directionalLight position={[-4, 0, -3]} intensity={1.15} color="#8e795d" />
         <pointLight position={[2, 2, 2]} intensity={8} distance={8} color={lens === "science" ? "#87c9d2" : "#c9a86f"} />
-        <Model lens={lens} />
-        <OrbitControls enablePan={false} minDistance={4.5} maxDistance={8.5} enableZoom={!compact} enableDamping dampingFactor={0.05} />
-        <Environment preset="warehouse" />
+        <Suspense fallback={<FallbackSpecimen lens={lens} />}>
+          <ModelErrorBoundary fallback={<FallbackSpecimen lens={lens} />}>
+            <Model lens={lens} />
+          </ModelErrorBoundary>
+          <Environment preset="warehouse" />
+        </Suspense>
+        <OrbitControls
+          enablePan={false}
+          minDistance={4.5}
+          maxDistance={8.5}
+          enableZoom={!compact}
+          enableDamping
+          dampingFactor={0.05}
+        />
       </Canvas>
       <div className="sceneGridOverlay" aria-hidden="true" />
       <div className="sceneLabel"><span>AND-MX-00017</span><span>{lens.toUpperCase()} VIEW · DRAG TO EXAMINE</span></div>
     </div>
   );
 }
-
-useGLTF.preload("/images/Matrixtwin_opal.glb");

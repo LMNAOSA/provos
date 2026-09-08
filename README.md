@@ -16,7 +16,7 @@ The site is no longer structured as a conventional presentation. Case 001 is the
 
 ### Specimen model
 
-Put the provided GLB at `public/images/Matrixtwin_opal.glb`.
+Keep the authoritative GLB at the repository root as `Matrixtwin_opal.glb`. The `prebuild` script automatically copies it to `public/images/Matrixtwin_opal.glb` before Next.js builds, so Vercel serves the real binary from the CDN path. The browser URL is `/images/Matrixtwin_opal.glb` (never `/public/images/...`).
 
 The scene loads that model and provides Field / Science / Geology / Provenance viewing states. A fallback mesh remains in code only as a resilient development fallback.
 
