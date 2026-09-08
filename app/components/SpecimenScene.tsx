@@ -7,10 +7,9 @@ import * as THREE from "three";
 
 export type SpecimenLens = "field" | "science" | "geology" | "provenance";
 
-const MODEL_URL = "/images/Matrixtwin_opal.glb";
-
-// The production build copies the authoritative repo-root GLB into this CDN-served path.
-// Keep this as a constant so the browser never references /public/... directly.
+const MODEL_URL =
+  process.env.NEXT_PUBLIC_SPECIMEN_MODEL_URL ||
+  "https://raw.githubusercontent.com/LMNAOSA/provos/main/Matrixtwin_opal.glb";
 
 class ModelErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };

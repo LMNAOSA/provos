@@ -16,7 +16,7 @@ The site is no longer structured as a conventional presentation. Case 001 is the
 
 ### Specimen model
 
-Keep the authoritative GLB at the repository root as `Matrixtwin_opal.glb`. The `prebuild` script automatically copies it to `public/images/Matrixtwin_opal.glb` before Next.js builds, so Vercel serves the real binary from the CDN path. The browser URL is `/images/Matrixtwin_opal.glb` (never `/public/images/...`).
+Keep the authoritative GLB at the repository root as `Matrixtwin_opal.glb`. The app loads this binary directly from GitHub by default via `NEXT_PUBLIC_SPECIMEN_MODEL_URL`. The obsolete `public/images/Matrixtwin_opal.glb` placeholder is not used.
 
 The scene loads that model and provides Field / Science / Geology / Provenance viewing states. A fallback mesh remains in code only as a resilient development fallback.
 
@@ -51,3 +51,6 @@ All current evidence cards are marked as demonstration data. Do not present synt
 9. Reassess
 10. Trace how the knowledge was formed
 11. Scale one case into the Andamooka Standard
+
+## Matrix Twin asset
+The production 3D specimen is loaded from the authoritative GitHub binary at `Matrixtwin_opal.glb` by default. Set `NEXT_PUBLIC_SPECIMEN_MODEL_URL` in Vercel to move the asset to a first-party CDN/object store later. The app no longer relies on a build-time copy into `public/images`, so the obsolete 2-byte placeholder cannot shadow the real model.

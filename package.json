@@ -1,10 +1,9 @@
 {
   "name": "provenanceos-andamooka",
-  "version": "0.3.1",
+  "version": "0.3.4",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/prepare-specimen.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
