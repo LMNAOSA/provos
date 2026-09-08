@@ -66,4 +66,4 @@ export function SpecimenScene({ compact = false, lens = "field" as SpecimenLens 
   );
 }
 
-useGLTF.preload("/images/Matrixtwin_opal.glb");
+useGLTF.preload("public/images/Matrixtwin_opal.glb");
