@@ -9,7 +9,7 @@ export type SpecimenLens = "field" | "science" | "geology" | "provenance";
 
 function Model({ lens }: { lens: SpecimenLens }) {
   const group = useRef<THREE.Group>(null);
-  const { scene } = useGLTF("public/images/Matrixtwin_opal.glb");
+  const { scene } = useGLTF("/images/Matrixtwin_opal.glb");
 
   const prepared = useMemo(() => {
     const copy = scene.clone(true);
@@ -66,4 +66,4 @@ export function SpecimenScene({ compact = false, lens = "field" as SpecimenLens 
   );
 }
 
-useGLTF.preload("public/images/Matrixtwin_opal.glb");
+useGLTF.preload("/images/Matrixtwin_opal.glb");
