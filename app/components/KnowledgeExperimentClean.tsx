@@ -6,7 +6,7 @@ type Role = "MAT" | "SPOONER" | "DANIELLE";
 type ExpertRole = Exclude<Role, "MAT">;
 type Request = { id: string; from: ExpertRole; prompt: string; response?: string; status: "OPEN" | "FULFILLED" };
 type Answer = { text: string; basis: string; uncertainty: string; confidence: number; request?: Request; reassessment?: { text: string; confidence: number; changed: boolean } };
-type Case = { id: string; date: string; question: string; observation: string; image?: string; pxrf: string; answers: Partial<Record<ExpertRole, Answer>>; requests: Request[]; history: string[] };
+type Case = { id: string; date: string; question: string; observation: string; image?: string; images?: { src: string; label: string; note: string }[]; pxrf: string; answers: Partial<Record<ExpertRole, Answer>>; requests: Request[]; history: string[] };
 
 type ExpertPaneProps = {
   role: ExpertRole; answer?: Answer; answerText: string; setAnswerText: (value: string) => void; basis: string; setBasis: (value: string) => void; uncertainty: string; setUncertainty: (value: string) => void; confidence: number; setConfidence: (value: number) => void; lock: () => void; myRequest?: Request; requestPrompt: string; setRequestPrompt: (value: string) => void; requestPxrf: () => void; reassessment: string; setReassessment: (value: string) => void; reassessmentConfidence: number; setReassessmentConfidence: (value: number) => void; changed: boolean; setChanged: (value: boolean) => void; lockReassessment: () => void;
@@ -21,7 +21,18 @@ const PEOPLE: Record<Role, { name: string; title: string; tag: string }> = {
 };
 
 const DEMO: Case = {
-  id: "CASE 001", date: "08 SEP 2026", question: "Why is this hard matrix phosphorescing so much?", observation: "Field observation · photograph supplied by Matt", pxrf: "NO XRF DATA SUPPLIED", answers: {}, requests: [], history: ["CASE CREATED · FIELD OBSERVATION", "QUESTION LOCKED · SENT TO EXPERTS", "pXRF STATUS · NO XRF DATA SUPPLIED"],
+  id: "CASE 001",
+  date: "08 SEP 2026",
+  question: "Why is this hard matrix phosphorescing so much?",
+  observation: "Matt reports strong phosphorescence after exposure to 365 nm UV light, with visible afterglow persisting for approximately 7 seconds.",
+  images: [
+    { src: "/images/case001_uv.jpg", label: "365 NM UV", note: "Visible phosphorescence · afterglow observed for ~7 seconds" },
+    { src: "/images/case001_normal.jpg", label: "NORMAL LIGHT", note: "Same hard matrix material under ordinary light" },
+  ],
+  pxrf: "NO XRF DATA SUPPLIED",
+  answers: {},
+  requests: [],
+  history: ["CASE CREATED · FIELD OBSERVATION", "QUESTION LOCKED · SENT TO EXPERTS", "pXRF STATUS · NO XRF DATA SUPPLIED"],
 };
 
 function readCases(): Case[] {
@@ -67,7 +78,17 @@ export function KnowledgeExperiment() {
   });
 
   const create = () => {
-    const c: Case = { id: `CASE ${String(cases.length + 1).padStart(3, "0")}`, date: new Date().toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase(), question: question.trim() || "Why is this hard matrix phosphorescing so much?", observation: observation.trim() || "Field observation · photograph supplied by Matt", image, pxrf: "NO XRF DATA SUPPLIED", answers: {}, requests: [], history: ["CASE CREATED · FIELD OBSERVATION", "QUESTION LOCKED · SENT TO EXPERTS", "pXRF STATUS · NO XRF DATA SUPPLIED"] };
+    const c: Case = {
+      id: `CASE ${String(cases.length + 1).padStart(3, "0")}`,
+      date: new Date().toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase(),
+      question: question.trim() || "Why is this hard matrix phosphorescing so much?",
+      observation: observation.trim() || "Field observation supplied by Matt",
+      image,
+      pxrf: "NO XRF DATA SUPPLIED",
+      answers: {},
+      requests: [],
+      history: ["CASE CREATED · FIELD OBSERVATION", "QUESTION LOCKED · SENT TO EXPERTS", "pXRF STATUS · NO XRF DATA SUPPLIED"],
+    };
     setCases(prev => { const next = [...prev, c]; localStorage.setItem("provenanceos-cases", JSON.stringify(next)); return next; });
     setActiveId(c.id); setQuestion(""); setObservation(""); setImage("");
   };
@@ -112,7 +133,13 @@ export function KnowledgeExperiment() {
     </header>
     <main>
       <section className="caseStrip"><div><span>CASE</span><strong>{active.id}</strong></div><div><span>DATE</span><strong>{active.date}</strong></div><div><span>STATE</span><strong>{bothLocked ? "INITIAL RESPONSES LOCKED" : "AWAITING INDEPENDENT RESPONSES"}</strong></div></section>
-      <section className="questionBlock"><span className="kicker">FIELD QUESTION</span><h2>{active.question}</h2><p>{active.observation}</p>{active.image ? <img className="fieldImage" src={active.image} alt="Field observation" /> : <div className="fieldImagePlaceholder"><span>FIELD PHOTOGRAPH</span><strong>Supplied by Matt</strong><small>Photograph appears here when the field case includes one.</small></div>}<div className="pxrfState"><span>pXRF DATA</span><strong>{active.pxrf}</strong></div></section>
+      <section className="questionBlock">
+        <span className="kicker">FIELD QUESTION</span>
+        <h2>{active.question}</h2>
+        <p>{active.observation}</p>
+        {active.images?.length ? <div className="case001Images">{active.images.map((img) => <figure key={img.src} className="case001Image"><img className="fieldImage" src={img.src} alt={img.label} /><figcaption><span>{img.label}</span><small>{img.note}</small></figcaption></figure>)}</div> : active.image ? <img className="fieldImage" src={active.image} alt="Field observation" /> : <div className="fieldImagePlaceholder"><span>FIELD PHOTOGRAPH</span><strong>Supplied by Matt</strong><small>Photograph appears here when the field case includes one.</small></div>}
+        <div className="pxrfState"><span>pXRF DATA</span><strong>{active.pxrf}</strong></div>
+      </section>
       {role === "MAT" ? <><NewQuestion question={question} setQuestion={setQuestion} observation={observation} setObservation={setObservation} image={image} setImage={setImage} create={create} /><MattPane openRequest={openRequest} pxrfResponse={pxrfResponse} setPxrfResponse={setPxrfResponse} returnPxrf={returnPxrf} /></> : <ExpertPane role={role} answer={active.answers[role]} answerText={answerText} setAnswerText={setAnswerText} basis={basis} setBasis={setBasis} uncertainty={uncertainty} setUncertainty={setUncertainty} confidence={confidence} setConfidence={setConfidence} lock={() => lock(role)} myRequest={active.answers[role]?.request} requestPrompt={requestPrompt} setRequestPrompt={setRequestPrompt} requestPxrf={() => requestPxrf(role)} reassessment={reassessment} setReassessment={setReassessment} reassessmentConfidence={reassessmentConfidence} setReassessmentConfidence={setReassessmentConfidence} changed={changed} setChanged={setChanged} lockReassessment={() => lockReassessment(role)} />}
       {bothLocked && <Reveal active={active} />}
       <History active={active} />
