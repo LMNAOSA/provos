@@ -8,6 +8,7 @@ import "./knowledge-experiment.css";
 import "./presentation.css";
 import "./provenance-redesign.css";
 import "./demo-polish.css";
+import "./case-image-fix.css";
 
 export const metadata: Metadata = {
   title: "The Andamooka Experiment — ProvenanceOS™",
