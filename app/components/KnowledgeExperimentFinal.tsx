@@ -10,7 +10,8 @@ type Answer = { text: string; basis: string; uncertainty: string; confidence: nu
 type CaseImage = { src: string; label: string; note: string };
 type Case = { id: string; date: string; question: string; observation: string; images: CaseImage[]; pxrf: string; answers: Partial<Record<ExpertRole, Answer>>; requests: Request[]; history: string[] };
 
-const STORAGE = "provenanceos-cases";
+// Versioned deliberately so an old local demo answer cannot bleed into a clean case.
+const STORAGE = "provenanceos-cases-v2";
 const PEOPLE: Record<Role, { name: string; title: string; tag: string }> = {
   MAT: { name: "Matt Kathagen", title: "Mooka Boys · Field / Mining", tag: "FIELD" },
   SPOONER: { name: "Professor Nigel Spooner", title: "Professor of Radiation Physics and Luminescence", tag: "SCIENCE" },
@@ -23,8 +24,8 @@ const DEMO: Case = {
   question: "Why is this hard matrix phosphorescing so much?",
   observation: "Field observation supplied by Matt. Visible afterglow was observed after 365 nm UV exposure, persisting for approximately 7 seconds.",
   images: [
-    { src: "/images/case001_uv.jpg", label: "365 NM UV", note: "Hard matrix under UV excitation · visible afterglow observed for ~7 seconds" },
     { src: "/images/case001_normal.jpg", label: "NORMAL LIGHT", note: "Same material under ordinary light" },
+    { src: "/images/case001_uv.jpg", label: "365 NM UV", note: "Hard matrix under UV excitation · visible afterglow observed for ~7 seconds" },
   ],
   pxrf: "NO XRF DATA SUPPLIED",
   answers: {},
@@ -69,7 +70,7 @@ export function KnowledgeExperiment() {
 
   const resetDemo = () => {
     setCases([DEMO]);
-    localStorage.setItem(STORAGE, JSON.stringify([DEMO]));
+    localStorage.removeItem(STORAGE);
     setAnswerText(""); setBasis(""); setUncertainty(""); setConfidence(50);
     setRequestPrompt(""); setReassessment(""); setReassessmentConfidence(50); setChanged(false); setPxrfResponse("");
   };
@@ -111,7 +112,7 @@ export function KnowledgeExperiment() {
       <div className="demoUtility"><span>DEMO STATE · {bothLocked ? "INITIAL READINGS SEALED" : "AWAITING INDEPENDENT READINGS"}</span><button onClick={resetDemo}>RESET CASE</button></div>
     </section>
 
-    <section className="questionBlock"><div className="questionLabelRow"><span className="kicker">CASE 001 · FIELD QUESTION</span><span className="caseRef">REAL FIELD OBSERVATION</span></div><h2>{active.question}</h2><p className="observationCopy">{active.observation}</p><div className="case001Images">{active.images.map((img) => <figure className="case001Image" key={img.src}><div className="imageFrame"><img className="fieldImage" src={img.src} alt={img.label} /></div><figcaption><span>{img.label}</span><small>{img.note}</small></figcaption></figure>)}</div><div className="pxrfState"><span>pXRF DATA</span><strong>{active.pxrf}</strong></div></section>
+    <section className="questionBlock"><div className="questionLabelRow"><span className="kicker">CASE 001 · FIELD QUESTION</span><span className="caseRef">REAL FIELD OBSERVATION</span></div><h2>{active.question}</h2><p className="observationCopy">{active.observation}</p><div className="case001Images">{active.images.map((img) => <figure className="case001Image" key={img.src}><div className="imageFrame"><img className="fieldImage" src={img.src} alt={img.label} /><span className="imageTag">{img.label}</span></div><figcaption><small>{img.note}</small></figcaption></figure>)}</div><div className="pxrfState"><span>pXRF DATA</span><strong>{active.pxrf}</strong></div></section>
 
     {role === "MAT" ? <section className="matWaiting"><span className="kicker">FIELD · MATT KATHAGEN</span><h3>Watch the blind readings take shape.</h3><p>The field role supplies the observation and returns measurement data only after both independent initial judgements are sealed.</p>{openRequest ? <><div className="requestQuote">“{openRequest.prompt}”</div>{!bothLocked ? <div className="waitingMark">WAITING FOR THE SECOND INITIAL READING</div> : <><label className="kicker" htmlFor="pxrf">RETURN pXRF MEASUREMENT</label><textarea id="pxrf" value={pxrfResponse} onChange={(e) => setPxrfResponse(e.target.value)} placeholder="Enter the returned measurement exactly as supplied." /><button className="loginBtn" onClick={returnEvidence}>RETURN pXRF DATA <span>→</span></button></>}</> : <div className="waitingMark">NO OPEN EVIDENCE REQUEST</div>}</section> : <section className="workflowStack">
       <section className="expertResponse"><div className="responseHead"><div><span className="kicker">{PEOPLE[role].tag} · INDEPENDENT RESPONSE</span><h3>{PEOPLE[role].name}</h3><p>{PEOPLE[role].title}</p></div><div className="blindLock">SEALED<br /><small>OTHER RESPONSE HIDDEN</small></div></div>
