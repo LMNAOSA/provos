@@ -1,3 +1,3 @@
 "use client";
 
-export { KnowledgeExperiment } from "./KnowledgeExperimentFinal";
+export { KnowledgeExperiment } from "./KnowledgeExperimentReshi";
