@@ -1,0 +1,93 @@
+/* ProvenanceOS v4 — editorial field instrument. No SaaS cards. */
+
+.instrumentV4{
+  --iv-bg:#090a09;
+  --iv-ink:#eee9df;
+  --iv-dim:#969189;
+  --iv-faint:#5c5a55;
+  --iv-line:rgba(235,230,220,.13);
+  --iv-line-soft:rgba(235,230,220,.07);
+  --iv-brass:#c4ab78;
+  --iv-blue:#86a4aa;
+  color:var(--iv-ink);
+  width:min(1380px,calc(100vw - 96px));
+  margin:0 auto;
+  font-family:var(--font-sans,"Helvetica Neue",Helvetica,Arial,sans-serif);
+}
+.instrumentV4 *{box-sizing:border-box}
+.instrumentV4 button,.instrumentV4 textarea,.instrumentV4 input{font:inherit}
+.instrumentV4 button{cursor:pointer}
+
+.instrumentMasthead{display:flex;justify-content:space-between;align-items:center;padding:26px 0 22px;border-bottom:1px solid var(--iv-line)}
+.instrumentBrand{display:flex;align-items:baseline;gap:22px;text-transform:uppercase;letter-spacing:.15em;font:500 8px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);color:var(--iv-dim)}
+.brandName{color:var(--iv-brass)}
+.mastMeta{font:500 8px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.12em;color:var(--iv-faint)}
+
+.choosePosition{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,2fr) auto;gap:38px;align-items:center;padding:30px 0;border-bottom:1px solid var(--iv-line)}
+.chooseIntro .kicker,.roleBrief .kicker,.fieldPanel .kicker,.expertPanel .kicker,.historyPanel .kicker,.revealPanel .kicker,.evidenceField .kicker{color:var(--iv-faint)}
+.chooseIntro h2{margin:10px 0 8px;font:400 clamp(28px,3vw,42px)/.98 Georgia,"Iowan Old Style","Baskerville",serif;letter-spacing:-.035em}
+.chooseIntro p{max-width:380px;margin:0;color:var(--iv-dim);font-size:12px;line-height:1.45}
+.peopleRail{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid var(--iv-line-soft)}
+.personChoice{appearance:none;position:relative;min-height:84px;padding:18px 38px 16px 20px;border:0;border-right:1px solid var(--iv-line-soft);border-top:1px solid transparent;border-bottom:1px solid transparent;background:transparent;text-align:left;color:var(--iv-dim);transition:background .2s ease,border-color .2s ease,color .2s ease}
+.personChoice:hover{background:rgba(255,255,255,.025);color:var(--iv-ink)}
+.personChoice.selected{background:rgba(196,171,120,.065);border-top-color:rgba(196,171,120,.45);border-bottom-color:rgba(196,171,120,.45);color:var(--iv-ink)}
+.personNo{position:absolute;top:12px;right:16px;font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);color:var(--iv-faint);letter-spacing:.1em}
+.personName{display:block;font:400 19px/1.05 Georgia,"Iowan Old Style","Baskerville",serif;letter-spacing:-.02em}
+.personMode{display:block;margin-top:10px;font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.14em;color:var(--iv-faint)}
+.personChoice.selected .personMode{color:var(--iv-brass)}
+.personArrow{position:absolute;left:20px;bottom:9px;font-size:13px;opacity:.35;transform:translateY(2px);transition:opacity .2s,transform .2s}
+.personChoice.selected .personArrow{opacity:1;transform:none;color:var(--iv-brass)}
+.resetCase{align-self:stretch;padding:0 9px;border:0;border-left:1px solid var(--iv-line-soft);background:transparent;color:var(--iv-faint);font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.14em;writing-mode:vertical-rl;transform:rotate(180deg)}
+.resetCase:hover{color:var(--iv-brass)}
+
+.caseTitleBlock{padding:66px 0 44px;border-bottom:1px solid var(--iv-line)}
+.sectionLabel{display:grid;grid-template-columns:auto auto 1fr;gap:26px;color:var(--iv-faint);font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.14em}
+.sectionLabel span:last-child{text-align:right;color:var(--iv-brass)}
+.titleGrid{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:70px;align-items:end;margin-top:18px}
+.caseQuestion h1{max-width:1080px;margin:0;font:400 clamp(56px,7.1vw,112px)/.9 Georgia,"Iowan Old Style","Baskerville",serif;letter-spacing:-.065em;text-wrap:balance}
+.caseQuestion p{max-width:700px;margin:25px 0 0;color:var(--iv-dim);font-size:13px;line-height:1.6}
+.phaseRail{display:grid;gap:0;border-top:1px solid var(--iv-line);border-bottom:1px solid var(--iv-line)}
+.phaseDot{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:center;min-height:46px;border-bottom:1px solid var(--iv-line-soft);color:var(--iv-faint)}
+.phaseDot:last-child{border-bottom:0}.phaseDot span{font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace)}.phaseDot strong{font:500 8px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.16em}
+.phaseDot.current{color:var(--iv-ink)}.phaseDot.current strong{color:var(--iv-brass)}.phaseDot.passed{color:#747871}
+.phaseDot.current span{color:var(--iv-brass)}
+
+.evidenceField{padding:48px 0 58px;border-bottom:1px solid var(--iv-line)}
+.evidenceTop{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:26px}
+.evidenceTop h2,.positionIntro h2,.revealIntro h2,.historyTitle h2{margin:10px 0 0;font:400 clamp(34px,4.3vw,58px)/.93 Georgia,"Iowan Old Style","Baskerville",serif;letter-spacing:-.045em}
+.pxrfBadge{display:flex;gap:18px;align-items:baseline;color:var(--iv-faint);font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.13em}.pxrfBadge strong{color:var(--iv-brass)}
+.evidencePair{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:22px}
+.evidencePair figure{margin:0}.photoFrame{position:relative;background:#0d0e0d;border:1px solid var(--iv-line);overflow:hidden}.photoFrame img{display:block;width:100%;height:clamp(420px,47vw,650px);object-fit:cover}.evidenceFigure1 .photoFrame img{object-position:center 56%}.evidenceFigure2 .photoFrame img{object-position:center center}
+.photoFrame:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.04),transparent 25%,transparent 75%,rgba(0,0,0,.12))}
+.imageStamp{position:absolute;left:14px;top:14px;z-index:1;padding:7px 9px;background:rgba(8,9,8,.82);border:1px solid rgba(235,230,220,.16);color:var(--iv-ink);font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.14em}
+.evidencePair figcaption{margin-top:10px;color:var(--iv-faint);font-size:10px;line-height:1.4}
+
+.roleBrief{display:grid;grid-template-columns:minmax(260px,1.2fr) minmax(0,1fr);gap:70px;align-items:end;padding:38px 0 42px;border-bottom:1px solid var(--iv-line)}
+.roleBrief h2{margin:10px 0 0;font:400 34px/.95 Georgia,"Iowan Old Style","Baskerville",serif;letter-spacing:-.04em}.roleBrief p{max-width:620px;margin:0;color:var(--iv-dim);font-size:13px;line-height:1.55}
+
+.expertPanel,.fieldPanel{padding:54px 0 62px;border-bottom:1px solid var(--iv-line)}
+.expertHeader{display:flex;justify-content:space-between;gap:30px;align-items:start}.expertHeader h3,.fieldPanel h3{margin:9px 0 4px;font:400 35px/.96 Georgia,"Iowan Old Style","Baskerville",serif;letter-spacing:-.04em}.expertHeader p,.fieldPanel p{margin:0;color:var(--iv-dim);font-size:12px;line-height:1.5}.lockState{padding-top:3px;text-align:right}.lockState span,.lockState strong{display:block;font:500 7px/1.35 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.13em;color:var(--iv-blue)}.lockState strong{color:var(--iv-faint);margin-top:6px}
+.writingGrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.72fr);gap:34px;margin-top:39px}
+.writingGrid label,.smallFields label,.nextStep label{display:block}.writingGrid label>span,.smallFields label>span,.probability>div span{display:block;color:var(--iv-faint);font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.15em}
+.writingGrid textarea,.nextStep textarea,.fieldAction textarea{width:100%;margin-top:12px;padding:10px 0 13px;border:0;border-bottom:1px solid var(--iv-line);background:transparent;border-radius:0;outline:0;resize:vertical;color:var(--iv-ink);font:400 16px/1.55 var(--font-sans,"Helvetica Neue",Arial,sans-serif)}
+.writingGrid textarea::placeholder,.nextStep textarea::placeholder,.fieldAction textarea::placeholder{color:#4f4d48}.writingGrid textarea:focus,.nextStep textarea:focus,.fieldAction textarea:focus{border-bottom-color:rgba(196,171,120,.65)}
+.bigField textarea{min-height:235px}.smallFields{display:grid;gap:26px}.smallFields textarea{min-height:98px}
+.probability{margin-top:28px;padding-top:17px;border-top:1px solid var(--iv-line)}.probability>div{display:flex;justify-content:space-between;align-items:baseline}.probability strong{font:400 22px/1 Georgia,"Iowan Old Style","Baskerville",serif;color:var(--iv-brass)}.probability input{display:block;width:100%;margin:14px 0 8px;accent-color:var(--iv-brass)}.probability small{color:var(--iv-faint);font-size:10px}.probability.compact{margin-top:24px}
+.primaryAction,.secondaryAction{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:25px;padding:17px 0 14px;border:0;border-top:1px solid var(--iv-line);border-bottom:1px solid var(--iv-line);background:transparent;color:var(--iv-ink);font:500 8px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.12em}.primaryAction:hover,.secondaryAction:hover{color:var(--iv-brass)}.primaryAction span,.secondaryAction span{font-size:16px}.primaryAction:disabled,.secondaryAction:disabled{opacity:.35}
+.sealedView{margin-top:40px;padding-left:23px;border-left:1px solid var(--iv-brass)}.sealedView>span{color:var(--iv-blue);font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.12em}.sealedView blockquote{max-width:1000px;margin:18px 0 25px;font:400 31px/1.16 Georgia,"Iowan Old Style","Baskerville",serif;letter-spacing:-.025em}.sealedMeta{display:grid;grid-template-columns:1fr 1fr;gap:35px}.sealedMeta span,.reading>span,.difference span,.reassessment span{display:block;color:var(--iv-faint);font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.14em}.sealedMeta p{margin:7px 0 0;color:#99958e;font-size:11px;line-height:1.55}
+.nextStep{margin-top:45px;padding-top:38px;border-top:1px solid var(--iv-line)}.nextStep h3{margin:10px 0 8px;font:400 30px/.98 Georgia,"Iowan Old Style","Baskerville",serif;letter-spacing:-.035em}.nextStep p{max-width:690px;margin:0;color:var(--iv-dim);font-size:12px;line-height:1.55}.nextStep textarea{min-height:95px}.requestStatus{margin-top:24px;padding-left:18px;border-left:1px solid var(--iv-brass)}.requestStatus strong{font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.12em;color:var(--iv-brass)}.requestStatus p{margin:10px 0 0;color:#aaa69e}.requestStatus small{display:block;margin-top:8px;color:var(--iv-faint);font-size:10px}
+.checkLine{display:flex;align-items:center;gap:8px;margin-top:17px;color:var(--iv-dim)!important;font:500 8px/1 var(--font-mono,"SF Mono",ui-monospace,monospace)!important;letter-spacing:.09em}.checkLine input{accent-color:var(--iv-brass)}
+
+.fieldPanel{display:grid;grid-template-columns:48px minmax(280px,.85fr) minmax(0,1.15fr);gap:35px;align-items:start}.panelIndex{font:400 15px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);color:var(--iv-faint)}.fieldAction blockquote{margin:13px 0 22px;padding-left:18px;border-left:1px solid var(--iv-brass);font:400 20px/1.3 Georgia,"Iowan Old Style","Baskerville",serif}.waiting{margin-top:22px;color:var(--iv-faint);font:500 7px/1.5 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.12em}
+
+.revealPanel{padding:64px 0 70px;border-bottom:1px solid var(--iv-line)}.revealHeader{display:grid;grid-template-columns:1fr .75fr;gap:60px;align-items:end}.revealHeader p{max-width:460px;margin:0;color:var(--iv-dim);font-size:12px;line-height:1.55}.readingGrid{display:grid;grid-template-columns:1fr 1fr;margin-top:48px}.reading{padding:0 38px 0 0;border-top:1px solid var(--iv-line);padding-top:24px}.reading+article{padding:24px 0 0 38px;border-left:1px solid var(--iv-line)}.reading h3{margin:12px 0 0;font:400 16px/1 Georgia,"Iowan Old Style","Baskerville",serif}.reading blockquote{margin:22px 0 18px;font:400 28px/1.18 Georgia,"Iowan Old Style","Baskerville",serif;letter-spacing:-.025em}.reading strong{font:400 28px/1 Georgia,"Iowan Old Style","Baskerville",serif;color:var(--iv-brass);margin-right:10px}.reading>small{color:var(--iv-faint);font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.12em}.reassessment{margin-top:25px;padding:16px 0;border-top:1px solid var(--iv-line-soft)}.reassessment p{margin:8px 0;color:#a7a29a;font-size:11px;line-height:1.5}.reassessment small{color:var(--iv-blue);font:500 7px/1 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.1em}.difference{display:flex;justify-content:space-between;align-items:baseline;margin-top:42px;padding:17px 0;border-top:1px solid var(--iv-line);border-bottom:1px solid var(--iv-line)}.difference strong{font:400 18px/1 Georgia,"Iowan Old Style","Baskerville",serif;color:var(--iv-brass)}
+
+.historyPanel{display:grid;grid-template-columns:1fr 1fr;gap:80px;padding:58px 0 90px}.historyTitle h2{font-size:48px}.historyList{border-top:1px solid var(--iv-line)}.historyList p{display:grid;grid-template-columns:36px 1fr;gap:18px;margin:0;padding:15px 0;border-bottom:1px solid var(--iv-line-soft);color:#8b8780;font:500 8px/1.3 var(--font-mono,"SF Mono",ui-monospace,monospace);letter-spacing:.08em}.historyList p span{color:var(--iv-faint)}
+
+@media (max-width:980px){
+  .instrumentV4{width:min(100% - 36px,760px)}
+  .choosePosition{grid-template-columns:1fr;gap:24px}.peopleRail{grid-template-columns:1fr}.resetCase{writing-mode:horizontal-tb;transform:none;border-left:0;border-top:1px solid var(--iv-line-soft);padding:12px 0;text-align:left}.personChoice{border-right:0}
+  .titleGrid,.evidenceTop,.roleBrief,.revealHeader,.historyPanel{grid-template-columns:1fr;display:grid;gap:30px}.phaseRail{grid-template-columns:repeat(5,1fr);border:0;gap:8px}.phaseDot{display:block;min-height:0;padding:12px 0;border:0!important}.phaseDot strong{display:block;margin-top:6px}.phaseDot span{display:block}.phaseRail .phaseDot.current{border-top:1px solid var(--iv-brass)!important}
+  .evidencePair,.writingGrid,.readingGrid,.fieldPanel{grid-template-columns:1fr}.evidenceFigure2 .photoFrame img,.evidenceFigure1 .photoFrame img{height:min(72vw,620px)}.reading+article{padding-left:0;border-left:0;border-top:1px solid var(--iv-line);margin-top:34px}.sealedMeta{grid-template-columns:1fr}
+}
+@media (max-width:620px){.instrumentV4{width:calc(100% - 28px)}.instrumentMasthead{align-items:flex-start;gap:20px}.instrumentBrand{display:grid;gap:6px}.mastMeta{font-size:7px}.caseTitleBlock{padding-top:45px}.caseQuestion h1{font-size:48px}.sectionLabel{grid-template-columns:1fr 1fr}.sectionLabel span:last-child{grid-column:1/-1;text-align:left}.evidenceTop h2,.positionIntro h2,.revealIntro h2,.historyTitle h2{font-size:36px}.personName{font-size:17px}.photoFrame img,.evidenceFigure2 .photoFrame img,.evidenceFigure1 .photoFrame img{height:86vw}.expertHeader{display:block}.lockState{text-align:left;margin-top:18px}.writingGrid textarea{font-size:15px}.bigField textarea{min-height:210px}.historyTitle h2{font-size:34px}}
